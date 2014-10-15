@@ -24,7 +24,7 @@
         <td>
           <% if product.has_variants? %>
             <%= select_tag "part[id]", 
-                options_for_select(product.variants.map { |v| [variant_options(v), v.id] }) %>
+                options_for_select(product.variants_including_master.map { |v| [variant_options(v), v.id] }) %>
           <% else %>
             <%= hidden_field_tag "part[id]", product.master.id %>
             <%= Spree.t(:no_variants) %>
