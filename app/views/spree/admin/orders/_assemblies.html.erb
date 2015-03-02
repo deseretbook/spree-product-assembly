@@ -26,7 +26,7 @@
     <% order.line_items.assemblies.each do |item| %>
       <tbody>
         <tr class="" data-item-quantity="<%= item.quantity %>">
-          <td class="item-image"><%= mini_image(item.variant) %></td>
+          <td class="item-image"><%= list_image(item.variant) %></td>
           <td class="item-name">
             <%= item.product.name %> - <%= item.variant.sku %> <br />
             <%= "(" + variant_options(item.variant) + ")" unless item.variant.option_values.empty? %>
