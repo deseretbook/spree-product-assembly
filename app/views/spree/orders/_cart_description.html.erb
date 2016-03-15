@@ -1,5 +1,7 @@
 <% product = variant.product
-  if product.assembly? %>
+f product.assembly?
+  binding.pry
+%>
 <ul class='assembly_parts'>
   <% line_item.parts.each do |v| %>
   <li>(<%= line_item.count_of(v) %>)  <%= link_to v.name, product_path(v.product) %>  (<%= v.sku %>)</li>

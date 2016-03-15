@@ -15,14 +15,14 @@ module Spree
       OrderInventoryAssembly.new(self).verify
       self.destroy
     end
-    
+
     # The parts that apply to this particular LineItem. Usually `product#parts`, but
     # provided as a hook if you want to override and customize the parts for a specific
     # LineItem.
     def parts
       product.parts
     end
-    
+
     # The number of the specified variant that make up this LineItem. By default, calls
     # `product#count_of`, but provided as a hook if you want to override and customize
     # the parts available for a specific LineItem. Note that if you only customize whether
@@ -31,6 +31,31 @@ module Spree
     def count_of(variant)
       product.count_of(variant)
     end
+
+    def digital?
+      self.parts.all? {|part| part.digital?}
+    end
+
+    def some_digital?
+      self.parts.any? {|part| part.digital?}
+    end
+
+    def ebook?
+      self.parts.all? {|part| part.ebook? }
+    end
+
+    def some_ebooks?
+      self.parts.any? {|part| part.ebook? }
+    end
+
+    def download?
+      self.parts.all? {|part| part.download? }
+    end
+
+    def some_downloads?
+      self.parts.any? {|part| part.download? }
+    end
+
 
     private
       def update_inventory
