@@ -78,8 +78,8 @@ module Spree
         it "and all products must be digital" do
           parts = (1..2).map { create(:variant, digitals: [create(:digital_download)]) }
           product.parts << parts
-          #order.create_proposed_shipments
-          #order.finalize!
+          order.create_proposed_shipments
+          order.finalize!
 
           line_item.digital?.should be_true
           line_item.download?.should be_true

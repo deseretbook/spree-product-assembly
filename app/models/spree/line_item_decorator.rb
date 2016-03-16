@@ -23,6 +23,11 @@ module Spree
       product.parts
     end
 
+    # check if the LineItem is an Assembly
+    def assembly?
+      parts.present?
+    end
+
     # The number of the specified variant that make up this LineItem. By default, calls
     # `product#count_of`, but provided as a hook if you want to override and customize
     # the parts available for a specific LineItem. Note that if you only customize whether
@@ -32,28 +37,57 @@ module Spree
       product.count_of(variant)
     end
 
-    def digital?
-      self.parts.all? {|part| part.digital?}
+    def has_digitals?
+      if assembly?
+        self.parts.any? {|part| part.has_digitals?}
+      else
+        self.variant.has_digitals?
+      end
     end
 
-    def some_digital?
-      self.parts.any? {|part| part.digital?}
+    def digital?
+      if assembly?
+        self.parts.any? {|part| part.digital?}
+      else
+        self.variant.digital?
+      end
     end
 
     def ebook?
-      self.parts.all? {|part| part.ebook? }
+      if assembly?
+        self.parts.any? {|part| part.ebook? }
+      else
+        self.variant.ebook?
+      end
     end
 
-    def some_ebooks?
-      self.parts.any? {|part| part.ebook? }
+    def ebook
+      if assembly?
+        part_ebooks = self.parts.select {|part| part.ebook? }
+        part_ebooks.map {|variant| variant.digitals.first }
+      else
+        self.ebook? ? self.variant.digitals.first : nil
+      end
     end
 
     def download?
-      self.parts.all? {|part| part.download? }
+      if assembly?
+        self.parts.any? {|part| part.download? }
+      else
+        self.variant.download?
+      end
     end
 
-    def some_downloads?
-      self.parts.any? {|part| part.download? }
+    def create_download_links
+      self.digital_links.delete_all
+
+      self.parts.each do |part|
+        part.digitals.each do |digital|
+          self.quantity.times do
+            self.digital_links.create!(digital: digital)
+          end
+        end
+      end
     end
 
 
