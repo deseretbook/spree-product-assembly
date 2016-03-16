@@ -33,6 +33,8 @@ class ActiveRecord::Base
   end
 end
 
+Dir[File.join(File.dirname(__FILE__), "factories/*.rb")].each {|f| require f }
+
 # Forces all threads to share the same connection. This works on
 # Capybara because it starts the web server in a thread.
 ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection

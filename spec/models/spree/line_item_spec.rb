@@ -72,5 +72,32 @@ module Spree
         line_item.save
       end
     end
+
+    context "bundles must know about digital products" do
+
+        it "and all products must be digital" do
+          parts = (1..2).map { create(:variant, digitals: [create(:digital_download)]) }
+          product.parts << parts
+          order.create_proposed_shipments
+          order.finalize!
+
+          line_item.digital?.should be_true
+          line_item.download?.should be_true
+          line_item.some_digital?.should be_true
+          line_item.some_downloads?.should be_true
+        end
+
+        it "and all products must be ebook" do
+          parts = (1..2).map { create(:variant, digitals: [create(:digital_ebook)]) }
+          product.parts << parts
+
+          line_item.digital?.should be_true
+          line_item.ebook?.should be_true
+          line_item.some_digital?.should be_true
+          line_item.some_ebooks?.should be_true
+        end
+
+    end
   end
+
 end
